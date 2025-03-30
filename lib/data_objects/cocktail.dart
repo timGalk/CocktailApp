@@ -31,8 +31,8 @@ class Cocktail {
     );
   }
 
-  static List<Cocktail> fromJsonList(String str) {
-    final List<dynamic> jsonData = json.decode(str);
+  static List<Cocktail> fromJsonList(Map<String, dynamic> json) {
+    final List<dynamic> jsonData = json['data'];
     return jsonData.map((e) => Cocktail.fromJson(e)).toList();
   }
 }
