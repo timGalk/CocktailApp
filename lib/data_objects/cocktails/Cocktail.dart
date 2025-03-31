@@ -1,4 +1,5 @@
-import 'package:cocktail_app/data_objects/categories/Category.dart';
+import 'package:cocktail_app/data_objects/cocktails/categories/Category.dart';
+import 'package:cocktail_app/data_objects/ingredients/Ingredient.dart';
 
 class Cocktail {
   int id;
@@ -10,6 +11,7 @@ class Cocktail {
   bool alcoholic;
   DateTime createdAt;
   DateTime updatedAt;
+  List<Ingredient>? ingredients;
 
   Cocktail({
     required this.id,
@@ -21,6 +23,7 @@ class Cocktail {
     required this.alcoholic,
     required this.createdAt,
     required this.updatedAt,
+    required this.ingredients
   });
 
   factory Cocktail.fromJson(Map<String, dynamic> json) => Cocktail(
@@ -33,6 +36,9 @@ class Cocktail {
     alcoholic: json["alcoholic"],
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt: DateTime.parse(json["updatedAt"]),
+    ingredients:(json['ingredients'] as List<dynamic>)
+        .map((item) => Ingredient.fromJson(item))
+        .toList(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +51,7 @@ class Cocktail {
     "alcoholic": alcoholic,
     "createdAt": createdAt.toIso8601String(),
     "updatedAt": updatedAt.toIso8601String(),
+    "ingredients": ingredients
+
   };
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data_objects/Cocktail.dart';
+import '../data_objects/cocktails/Cocktail.dart';
 import '../services/RemoteService.dart';
 
 class DrinkListScreen extends StatefulWidget {
@@ -166,10 +166,16 @@ class DrinkDetailScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              'Ingredients:',
+              'Ingredients:${cocktail.ingredients?.map((x) => x.name).join(', ')}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
+            Text(
+              'Instructions:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+
           ],
         ),
       ),
