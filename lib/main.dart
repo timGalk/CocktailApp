@@ -1,8 +1,6 @@
 import 'package:cocktail_app/screens/DrinkScreen.dart';
+import 'package:cocktail_app/screens/cocktails_page.dart';
 import 'package:flutter/material.dart';
-
-import 'client/cocktail_client.dart';
-import 'data_objects/cocktail.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +23,8 @@ class DrinkApp extends StatelessWidget {
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
-      home: DrinkListScreen(),
+      // home: DrinkListScreen(),
+      home:CocktailsPage(), // Change this to your desired screen
     );
   }
 }
