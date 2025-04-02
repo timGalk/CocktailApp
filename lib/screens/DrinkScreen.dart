@@ -1,5 +1,5 @@
+import 'package:cocktail_app/screens/widgets/DrinkCard.dart';
 import 'package:flutter/material.dart';
-
 import '../data_objects/cocktails/Cocktail.dart';
 import '../services/RemoteService.dart';
 
@@ -20,17 +20,12 @@ class _DrinkListScreenState extends State<DrinkListScreen> {
     getData();
   }
 
-  getData() async {
-    cocktails = (await RemoteService().getCocktails())!.cast<Cocktail>();
-    if (cocktails != null) {
-      setState(() {
-        isLoading = true;
-      });
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+  Future<void> getData() async {
+    setState(() => isLoading = true); // Show loading initially
+    cocktails = await RemoteService().getCocktails();
+    setState(() {
+      isLoading = false; // Hide loading once data is fetched
+    });
   }
 
   String searchQuery = '';
@@ -40,9 +35,9 @@ class _DrinkListScreenState extends State<DrinkListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Drink List'),
+        title: const Text('Drink List'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(112.0),
+          preferredSize: const Size.fromHeight(112.0),
           child: Column(
             children: [
               Padding(
@@ -55,7 +50,7 @@ class _DrinkListScreenState extends State<DrinkListScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -74,7 +69,7 @@ class _DrinkListScreenState extends State<DrinkListScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    prefixIcon: Icon(Icons.filter_list),
+                    prefixIcon: const Icon(Icons.filter_list),
                   ),
                   onChanged: (value) {
                     setState(() {
@@ -87,59 +82,41 @@ class _DrinkListScreenState extends State<DrinkListScreen> {
           ),
         ),
       ),
-      body:
-          cocktails!.isEmpty
-              ? Center(
-                child: CircularProgressIndicator(),
-              ) // Show loading spinner when no data
-              : ListView(
-                children:
-                    cocktails!
-                        .where((cocktail) {
-                          return cocktail.name.toLowerCase().contains(
-                            searchQuery,
-                          );
-                        })
-                        .map((cocktail) {
-                          return Card(
-                            margin: EdgeInsets.all(8.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            elevation: 4,
-                            child: ListTile(
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  cocktail.imageUrl,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              title: Text(
-                                cocktail.name,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => DrinkDetailScreen(
-                                          cocktail: cocktail,
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        })
-                        .toList(),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : cocktails == null || cocktails!.isEmpty
+          ? const Center(child: Text('No cocktails found'))
+          : ListView(
+        children: cocktails!
+            .where((cocktail) {
+          final matchesSearch =
+          cocktail.name.toLowerCase().contains(searchQuery);
+          final matchesFilter = filterQuery.isEmpty ||
+              cocktail.ingredients
+                  ?.map((i) => i.name.toLowerCase())
+                  .join(', ')
+                  .contains(filterQuery) ==
+                  true;
+          return matchesSearch && matchesFilter;
+        })
+            .map((cocktail) => CocktailCard(
+          cocktail: cocktail,
+          onFavoriteToggle: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    DrinkDetailScreen(cocktail: cocktail),
               ),
+            );
+          },
+        ))
+            .toList(),
+      ),
     );
   }
 }
+
 
 class DrinkDetailScreen extends StatelessWidget {
   final Cocktail cocktail;
@@ -164,18 +141,21 @@ class DrinkDetailScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              'Ingredients:${cocktail.ingredients?.map((x) => x.name).join(', ')}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Ingredients: ${cocktail.ingredients?.map((x) => x.name).join(', ') ?? 'N/A'}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'Instructions:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              'Instructions: ${cocktail.instructions ?? 'N/A'}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
-
+            const SizedBox(height: 8),
+            Text(
+              'Glass: ${cocktail.glass ?? 'N/A'}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),

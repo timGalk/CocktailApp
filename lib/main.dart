@@ -1,5 +1,4 @@
 import 'package:cocktail_app/screens/DrinkScreen.dart';
-import 'package:cocktail_app/screens/cocktails_page.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

@@ -12,6 +12,7 @@ class Cocktail {
   DateTime createdAt;
   DateTime updatedAt;
   List<Ingredient>? ingredients;
+  bool isFavorite;
 
   Cocktail({
     required this.id,
@@ -23,7 +24,8 @@ class Cocktail {
     required this.alcoholic,
     required this.createdAt,
     required this.updatedAt,
-    required this.ingredients
+    required this.ingredients,
+    this.isFavorite = false,
   });
 
   factory Cocktail.fromJson(Map<String, dynamic> json) => Cocktail(
