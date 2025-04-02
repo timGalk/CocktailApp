@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,4 +27,4 @@ class ThemeProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('isDark', _themeMode == ThemeMode.dark);
   }
-}
+}*/

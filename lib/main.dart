@@ -23,7 +23,7 @@ class DrinkApp extends StatelessWidget {
         ),
       ),
       // home: DrinkListScreen(),
-      home:DrinkListScreen(), // Change this to your desired screen
+      home:CocktailListScreen(), // Change this to your desired screen
     );
   }
 }

@@ -3,59 +3,59 @@ import '../../data_objects/cocktails/Cocktail.dart';
 
 class CocktailCard extends StatelessWidget {
   final Cocktail cocktail;
-  final VoidCallback onFavoriteToggle;
+  final VoidCallback onTap;
 
   const CocktailCard({
     super.key,
     required this.cocktail,
-    required this.onFavoriteToggle,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: InkWell(
-        onTap: () {
-          // Navigate to DetailPage (not implemented here)
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Tapped ${cocktail.name}')),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8.0),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              borderRadius: BorderRadius.circular(4.0),
               child: Image.network(
                 cocktail.imageUrl,
-                height: 100,
-                width: double.infinity,
+                width: 50,
+                height: 50,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 100),
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, size: 24),
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      cocktail.name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      cocktail.isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: cocktail.isFavorite ? Colors.red : null,
-                    ),
-                    onPressed: onFavoriteToggle,
-                  ),
-                ],
+            const SizedBox(width: 12.0),
+            Expanded(
+              child: Text(
+                cocktail.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
